@@ -1,0 +1,42 @@
+services:
+
+  database:
+    build: ./postgres
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: db
+      POSTGRES_USER: usr
+      POSTGRES_PASSWORD: pwd
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  backend:
+    build: ./java-hello/simpleapi
+    container_name: backend
+    restart: always
+    ports:
+     - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - app-network
+
+  httpd:
+    build: ./java-hello/simpleapi/http-server
+    container_name: http-server
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+
+volumes:
+  pgdata:

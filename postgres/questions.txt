@@ -1,0 +1,71 @@
+1-1 For which reason is it better to run the container with a flag -e to give the environment variables rather than put them directly in the Dockerfile?
+
+It is preferable to use -e at runtime because it avoids exposing sensitive information inside the image,
+increases reusability of the Docker image across environments
+and allows configuration changes without rebuilding the image
+
+1-2 Why do we need a volume attached to a PostgreSQL container?
+
+A volume is required because containers are ephemeral, meaning all data stored inside them is lost when the container is removed.
+A volume ensures that data is stored on the host machine and remains persistent across container restarts, deletions, and recreations, making the database durable and reliable.
+
+1-3 Document your database container essentials: commands and Dockerfile.
+
+The PostgreSQL container is built from a custom Dockerfile based on the official postgres image.
+Environment variables are passed at runtime using -e for better security and flexibility.
+SQL initialization scripts are copied into /docker-entrypoint-initdb.d and executed at first startup.
+A Docker volume is used to persist database data beyond container lifecycle.
+The container is run on a custom network to allow communication with Adminer.
+
+1-4 Why do we need a multistage build? And explain each step of this dockerfile.
+
+A multistage build is used to separate the build environment (JDK + Maven) from the runtime environment (JRE only).
+This makes the final Docker image smaller, more secure, and cleaner because it does not include unnecessary build tools.
+
+1-5 Why do we need a reverse proxy?
+
+A reverse proxy is used to act as an entry point in front of backend services.
+It forwards client requests to the appropriate backend server, improves security by hiding internal services
+and allows additional features such as routing, load balancing and SSL termination.
+
+1-6 Why is docker-compose so important?
+
+Docker Compose is important because it allows multiple containers to be managed together from a single configuration file.
+It automates the creation, startup, shutdown and networking
+
+1-7 Most important docker-compose commands
+
+start containers : docker compose up
+start containers in background : docker compose up -d
+Rebuild images and start : docker compose up --build
+Stop containers : docker compose down
+Restart services : docker compose restart
+
+1-8 Documentation of the docker-compose file
+
+The docker-compose.yml file defines the three services of the application:
+the PostgreSQL database
+the Spring Boot backend API
+and the Apache HTTP server acting as a reverse proxy.
+
+services defines the application containers.
+build specifies the Dockerfile location for each service.
+depends_on defines startup dependencies between services.
+ports exposes the Apache server to the host machine.
+networks allows communication between containers.
+volumes persist PostgreSQL data outside the container lifecycle.
+environment stores database configuration variables.
+restart: always automatically restarts containers if they stop unexpectedly.
+
+1-9 Document your publication commands and published images in Docker Hub
+
+The publication process consisted of logging into Docker Hub using docker login, 
+tagging local images with a version and repository name using docker tag,
+ and publishing them online using docker push.
+
+1-10 Why do we put our images into an online repo?
+
+Docker images are stored in online repositories to make them easily accessible,
+shareable, and deployable across different machines and environments.
+Online registries such as Docker Hub allow teams and deployment servers to pull
+the exact same application version, improving portability, collaboration, version management, and deployment automation.
