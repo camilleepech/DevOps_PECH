@@ -26,7 +26,7 @@ jobs:
   sonar-analysis:
     runs-on: ubuntu-24.04
 
-        steps:
+    steps:
       - uses: actions/checkout@v4
 
       - name: Set up JDK 21
