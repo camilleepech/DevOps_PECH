@@ -47,7 +47,7 @@ jobs:
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest  # Image name + tag
 
 
-      # ---------------- DATABASE ---------------- test
+      # ---------------- DATABASE ---------------- test 2
       - name: Build and push database image
         uses: docker/build-push-action@v6
         with:
