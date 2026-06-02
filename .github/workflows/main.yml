@@ -24,6 +24,14 @@ jobs:
         working-directory: java-hello/simpleapi
         run: mvn clean verify -DskipTests #compile and run backend tests
 
+      - name: SonarCloud analysis
+        working-directory: java-hello/simpleapi
+        run: mvn -B verify sonar:sonar \
+          -Dsonar.projectKey=camilleepech_DevOps_PECH \
+          -Dsonar.organization=camilleepech \
+          -Dsonar.host.url=https://sonarcloud.io \
+          -Dsonar.login=${{ secrets.SONAR_TOKEN }}      
+
   build-and-push-docker-image:
     needs: test-backend #ensures images built only if tests succed
     runs-on: ubuntu-24.04
