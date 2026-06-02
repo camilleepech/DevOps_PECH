@@ -24,7 +24,9 @@ jobs:
         with:
           context: ./java-hello/simpleapi
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:${{ github.event.workflow_run.head_sha }}
 
   build-database-image:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -41,7 +43,9 @@ jobs:
         with:
           context: ./postgres
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-postgres:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-postgres:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-postgres:${{ github.event.workflow_run.head_sha }}
 
   build-httpd-image:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
@@ -58,4 +62,6 @@ jobs:
         with:
           context: ./java-hello/simpleapi/http-server
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:${{ github.event.workflow_run.head_sha }}

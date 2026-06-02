@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4  #clone repository code
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -22,7 +22,19 @@ jobs:
 
       - name: Build and test with Maven
         working-directory: java-hello/simpleapi
-        run: mvn clean verify -DskipTests
+        run: mvn clean verify -DskipTests #compile and run backend tests
+  sonar-analysis:
+    needs: test-backend #only if previous test is succeed
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
       - name: SonarCloud analysis
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=camilleepech_DevOps_PECH -Dsonar.organization=camilleepech -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=${{ secrets.SONAR_TOKEN }}  --file ./java-hello/simpleapi/pom.xml
