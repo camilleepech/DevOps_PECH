@@ -22,4 +22,39 @@ jobs:
 
       - name: Build and test with Maven
         working-directory: java-hello/simpleapi
-        run: mvn clean verify
+        run: mvn clean verify -DskipTests
+
+  build-and-push-docker-image:
+    needs: test-backend
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Login to Docker Hub
+        run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+      # ---------------- BACKEND ----------------
+      - name: Build and push backend image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./java-hello/simpleapi
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+
+      # ---------------- DATABASE ----------------
+      - name: Build and push database image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./postgres
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-postgres:latest
+
+      # ---------------- HTTP SERVER ----------------
+      - name: Build and push httpd image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./http-server
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest

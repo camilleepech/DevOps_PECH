@@ -1,1 +1,5 @@
-2.1
+2.1 What are testcontainers?
+Testcontainers is a Java testing library that allows you to run real services
+(like PostgreSQL or MySQL) inside Docker containers during tests.
+It creates and removes these containers automatically
+giving a clean and realistic environment for each test run.
