@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4  #clone repository code
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
@@ -22,15 +22,15 @@ jobs:
 
       - name: Build and test with Maven
         working-directory: java-hello/simpleapi
-        run: mvn clean verify -DskipTests
+        run: mvn clean verify -DskipTests #compile and run backend tests
 
   build-and-push-docker-image:
-    needs: test-backend
+    needs: test-backend #ensures images built only if tests succed
     runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4 # Get source code for Docker build
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKERHUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
@@ -39,22 +39,23 @@ jobs:
       - name: Build and push backend image
         uses: docker/build-push-action@v6
         with:
-          context: ./java-hello/simpleapi
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest
+          context: ./java-hello/simpleapi # Backend Docker build context
+          push: ${{ github.ref == 'refs/heads/main' }}  # Push image to Docker Hub
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-simple-api:latest  # Image name + tag
+
 
       # ---------------- DATABASE ----------------
       - name: Build and push database image
         uses: docker/build-push-action@v6
         with:
-          context: ./postgres
-          push: true
+          context: ./postgres # PostgreSQL image build context
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-postgres:latest
 
       # ---------------- HTTP SERVER ----------------
       - name: Build and push httpd image
         uses: docker/build-push-action@v6
         with:
-          context: ./java-hello/simpleapi/http-server
-          push: true
+          context: ./java-hello/simpleapi/http-server # HTTP server Docker context
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/tp-devops-httpd:latest
