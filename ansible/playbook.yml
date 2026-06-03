@@ -1,0 +1,13 @@
+- hosts: all
+  become: true
+  gather_facts: true
+
+  vars_files:
+    - group_vars/all/vars.yml
+
+  roles:
+    - docker
+    - network
+    - database
+    - app
+    - proxy

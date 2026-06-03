@@ -1,0 +1,14 @@
+- name: Run backend container
+  community.docker.docker_container:
+    name: backend
+    image: camillepech/tp-devops-simple-api
+    state: started
+    restart_policy: always
+    env:
+      DB_HOST: "{{ db_host }}"
+      DB_USER: "{{ db_user }}"
+      DB_PASSWORD: "{{ db_password }}"
+      DB_NAME: "{{ db_name }}"
+    networks:
+      - name: my_network
+# tasks file for roles/app

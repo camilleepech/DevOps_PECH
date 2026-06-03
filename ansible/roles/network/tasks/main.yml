@@ -1,0 +1,4 @@
+- name: Create docker network
+  community.docker.docker_network:
+    name: my_network
+# tasks file for roles/network
