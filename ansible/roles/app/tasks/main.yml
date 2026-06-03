@@ -5,10 +5,9 @@
     state: started
     restart_policy: always
     env:
-      DB_HOST: "{{ db_host }}"
-      DB_USER: "{{ db_user }}"
-      DB_PASSWORD: "{{ db_password }}"
-      DB_NAME: "{{ db_name }}"
+      DB_HOST: "postgres-db"
+      DB_USER: "usr"
+      DB_PASSWORD: "pwd"
+      DB_NAME: "db"
     networks:
       - name: my_network
-# tasks file for roles/app
