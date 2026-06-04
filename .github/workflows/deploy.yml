@@ -1,0 +1,44 @@
+name: deploy-server
+
+on:
+  workflow_run:
+    workflows: ["build-and-push-docker-image"]
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # SSH setup
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H camille.pech.takima.school >> ~/.ssh/known_hosts
+
+      # Install Ansible
+      - name: Install Ansible
+        run: |
+          python3 -m pip install --upgrade pip
+          pip install ansible
+
+      # Run playbook
+      - name: Deploy with Ansible
+        run: |
+          ansible-playbook -i inventories/setup.yml playbook.yml
+        env:
+          ANSIBLE_HOST_KEY_CHECKING: "False"
+
+      # Verify deployment
+      - name: Check deployment
+        run: |
+          sleep 20
+          curl -f http://camille.pech.takima.school/students | grep -i "camille"
