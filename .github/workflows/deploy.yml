@@ -21,7 +21,7 @@ jobs:
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/id_rsa
-          chmod 400 ~/id_rsa
+          chmod 600 ~/id_rsa
           ssh-keyscan -H camille.pech.takima.school >> ~/.ssh/known_hosts
 
       # Install Ansible
@@ -43,4 +43,4 @@ jobs:
       - name: Check deployment
         run: |
           sleep 20
-          curl -f http://camille.pech.takima.school | grep -i "camille"
+          curl -f http://camille.pech.takima.school/?name=Camille
