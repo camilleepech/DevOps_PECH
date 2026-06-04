@@ -30,7 +30,7 @@ jobs:
           python3 -m pip install --upgrade pip
           pip install ansible
 
-      # Run playbook
+      # Run the playbook
       
       - name: Deploy with Ansible
         working-directory: ansible
@@ -43,4 +43,4 @@ jobs:
       - name: Check deployment
         run: |
           sleep 20
-          curl -f http://camille.pech.takima.school/students | grep -i "camille"
+          curl -f http://camille.pech.takima.school | grep -i "camille"
