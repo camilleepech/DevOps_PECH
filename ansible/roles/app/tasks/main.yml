@@ -1,7 +1,8 @@
 - name: Run backend container
   community.docker.docker_container:
     name: backend
-    image: camillepech/tp-devops-simple-api
+    image: camillepech/tp-devops-simple-api:latest
+    pull: true
     state: started
     restart_policy: always
     env:
