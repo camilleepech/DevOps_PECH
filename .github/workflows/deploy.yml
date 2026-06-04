@@ -31,7 +31,9 @@ jobs:
           pip install ansible
 
       # Run playbook
+      
       - name: Deploy with Ansible
+        working-directory: ansible
         run: |
           ansible-playbook -i inventories/setup.yml playbook.yml
         env:
